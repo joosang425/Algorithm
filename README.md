@@ -1,10 +1,10 @@
-# 백준
+### [백준](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80)
 
 <img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=C%2B%2B&logoColor=white"/></a>
 
 # Content
 
-## [브론즈](https://github.com/joosang425/Programmers-Algorithm/tree/main/Level1)
+#### [브론즈](https://github.com/joosang425/Programmers-Algorithm/tree/main/Level1)
 |제목|내용|제목|내용|제목|내용|제목|내용|
 |----------|----------|----------|----------|----------|----------|----------|----------|
 |로또의 최고 순위와 최저 순위|[cpp](https://github.com/joosang425/Programmers-Algorithm/blob/main/Level1/%EB%A1%9C%EB%98%90%EC%9D%98%20%EC%B5%9C%EA%B3%A0%20%EC%88%9C%EC%9C%84%EC%99%80%20%EC%B5%9C%EC%A0%80%20%EC%88%9C%EC%9C%84.txt)|숫자 문자열과 영단어|[cpp](https://github.com/joosang425/Programmers-Algorithm/blob/main/Level1/%EC%88%AB%EC%9E%90%20%EB%AC%B8%EC%9E%90%EC%97%B4%EA%B3%BC%20%EC%98%81%EB%8B%A8%EC%96%B4.txt)|신고 결과 받기|[cpp](https://github.com/joosang425/Programmers-Algorithm/blob/main/Level1/%EC%8B%A0%EA%B3%A0%20%EA%B2%B0%EA%B3%BC%20%EB%B0%9B%EA%B8%B0.txt)|신규 아이디|[cpp](https://github.com/joosang425/Programmers-Algorithm/blob/main/Level1/%EC%8B%A0%EA%B7%9C%20%EC%95%84%EC%9D%B4%EB%94%94.txt)|
