@@ -16,7 +16,7 @@
 #### [실버](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Bronze)
 |제목|내용|제목|내용|제목|내용|제목|내용|
 
-#### [골드](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Bronze)
+#### [골드](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Gold)
 |제목|내용|제목|내용|제목|내용|제목|내용|
 
 #### [플레](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Bronze)
