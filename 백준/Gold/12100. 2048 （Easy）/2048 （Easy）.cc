@@ -5,6 +5,7 @@ int n, arr[20][20], temp[20][20], result;
 int selected[5];
 int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
 
+// 조합을 위한 배열 복사 함수
 void copy(int arr1[][20], int arr2[][20]) {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
@@ -13,10 +14,14 @@ void copy(int arr1[][20], int arr2[][20]) {
 	}
 }
 
+// 격자 안에 있는 숫자를 옮기는 함수(방향의 따라 for문의 시작점이 틀림)
 void board_move(int direction) {
+	// 숫자를 한 번만 옮길 수 있는 조건을 처리하기 위한 배열
 	bool visited[20][20] = { false, };
+	
 	// 상
 	if (direction == 0) {
+		// 격자 안에서 숫자를 옮기는 for문 
 		for (int i = 1; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				if (!temp[i][j])
@@ -33,6 +38,7 @@ void board_move(int direction) {
 					if (y < 0)
 						break;
 					if (temp[y][x] == temp[i][j]) {
+						// 같은 숫자로 인해 합쳐지는 경우 한 번뿐
 						if (visited[y][x])
 							break;
 						else {
@@ -45,6 +51,7 @@ void board_move(int direction) {
 				}
 
 				if (flag) {
+					// 숫자가 합쳐지는 경우를 기록하기 위해 true로 변경
 					visited[y][x] = true;
 
 					temp[y][x] *= 2;
@@ -52,6 +59,7 @@ void board_move(int direction) {
 				}
 			}
 		}
+		// 숫자를 합친 뒤 해당 direction 방향으로 숫자를 옮기는 for문 
 		for (int i = 1; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				if (!temp[i][j])
@@ -62,7 +70,7 @@ void board_move(int direction) {
 				while (1) {
 					y = y + dir[direction][0];
 					x = x + dir[direction][1];
-
+					
 					if (temp[y][x] != 0 || y < 0)
 						break;
 				}
@@ -253,6 +261,7 @@ void board_move(int direction) {
 	}
 }
 
+// 모든 방향의 조합을 만드는 함수
 void solve() {
 	for (int i = 0; i < 5; i++) {
 		int direction = selected[i];
@@ -267,7 +276,7 @@ void solve() {
 	}
 }
 
-void dfs(int cnt) {
+void dfs(int cnt) { 
 	if (cnt == 5) {
 		copy(temp, arr);
 		solve();
