@@ -7,6 +7,7 @@
 #### [브론즈](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Bronze)
 |문제 번호|제목|내용|문제 번호|제목|내용|
 |----------|----------|----------|----------|----------|----------|
+|1000|A + B|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Bronze/1000.%E2%80%85A%EF%BC%8BB/A%EF%BC%8BB.c)|10926|? ? !|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Bronze/10926.%E2%80%85%EF%BC%9F%EF%BC%9F%EF%BC%81/%EF%BC%9F%EF%BC%9F%EF%BC%81.cc)|
 
 #### [실버](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Bronze)
 |문제 번호|제목|내용|문제 번호|제목|내용|
@@ -15,7 +16,9 @@
 #### [골드](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Gold)
 |문제 번호|제목|내용|문제 번호|제목|내용|
 |----------|----------|----------|----------|----------|----------|
+|12100|2048(Easy)|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/12100.%E2%80%852048%E2%80%85%EF%BC%88Easy%EF%BC%89/2048%E2%80%85%EF%BC%88Easy%EF%BC%89.cc)|13460|구슬 탈출 2|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/13460.%E2%80%85%EA%B5%AC%EC%8A%AC%E2%80%85%ED%83%88%EC%B6%9C%E2%80%852/%EA%B5%AC%EC%8A%AC%E2%80%85%ED%83%88%EC%B6%9C%E2%80%852.cc)|
 
 #### [플레](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Platinum)
 |문제 번호|제목|내용|문제 번호|제목|내용|
 |----------|----------|----------|----------|----------|----------|
+|23291|어항 정리|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Platinum/23291.%E2%80%85%EC%96%B4%ED%95%AD%E2%80%85%EC%A0%95%EB%A6%AC/%EC%96%B4%ED%95%AD%E2%80%85%EC%A0%95%EB%A6%AC.cc)|5373|큐빙|[cpp](https://github.com/joosang425/BOJ-Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Platinum/5373.%E2%80%85%ED%81%90%EB%B9%99/%ED%81%90%EB%B9%99.cc)|
