@@ -1,4 +1,4 @@
-### [백준](https://github.com/joosang425/BOJ-Algorithm/tree/main/%EB%B0%B1%EC%A4%80)
+### [백준](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80)
 
 <img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=C%2B%2B&logoColor=white"/></a>
 
