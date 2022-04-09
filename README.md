@@ -18,7 +18,8 @@
 |----------|----------|----------|----------|----------|----------|
 |12100|2048(Easy)|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/12100.%E2%80%852048%E2%80%85%EF%BC%88Easy%EF%BC%89/2048%E2%80%85%EF%BC%88Easy%EF%BC%89.cc)|13460|구슬 탈출 2|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/13460.%E2%80%85%EA%B5%AC%EC%8A%AC%E2%80%85%ED%83%88%EC%B6%9C%E2%80%852/%EA%B5%AC%EC%8A%AC%E2%80%85%ED%83%88%EC%B6%9C%E2%80%852.cc)|
 |16637|괄호 추가하기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/16637.%E2%80%85%EA%B4%84%ED%98%B8%E2%80%85%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0/%EA%B4%84%ED%98%B8%E2%80%85%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0.cc)|17281|⚾|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/17281.%E2%80%85%E2%9A%BE/%E2%9A%BE.cc)|
-|17136|색종이 붙이기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/17136.%E2%80%85%EC%83%89%EC%A2%85%EC%9D%B4%E2%80%85%EB%B6%99%EC%9D%B4%EA%B8%B0/%EC%83%89%EC%A2%85%EC%9D%B4%E2%80%85%EB%B6%99%EC%9D%B4%EA%B8%B0.cc)|
+|17136|색종이 붙이기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/17136.%E2%80%85%EC%83%89%EC%A2%85%EC%9D%B4%E2%80%85%EB%B6%99%EC%9D%B4%EA%B8%B0/%EC%83%89%EC%A2%85%EC%9D%B4%E2%80%85%EB%B6%99%EC%9D%B4%EA%B8%B0.cc)|17406|배열 돌리기 4|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/17406.%E2%80%85%EB%B0%B0%EC%97%B4%E2%80%85%EB%8F%8C%EB%A6%AC%EA%B8%B0%E2%80%854/%EB%B0%B0%EC%97%B4%E2%80%85%EB%8F%8C%EB%A6%AC%EA%B8%B0%E2%80%854.cc)|
+
 
 #### [플레](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Platinum)
 |문제 번호|제목|내용|문제 번호|제목|내용|
