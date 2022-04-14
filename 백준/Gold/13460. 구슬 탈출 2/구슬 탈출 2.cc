@@ -2,13 +2,14 @@
 using namespace std;
 
 int n, m, result = 987654321;
-char MAP[11][11];
 
-int dir[4][2] = { {0,-1}, {0,1}, {-1,0},{1,0} };
-
+char arr[10][10], temp[10][10];
 pair<int, int> red, blue;
 
-int reverse_dir(int num) {
+int dir[4][2] = { {0, -1}, {0, 1}, {-1, 0}, {1,0} };
+
+// 바로 전 기울기 방향과 현재 방향을 비교하기 위한 함수
+int reverse_d(int num) {
 	if (num == 0)
 		return 1;
 	else if (num == 1)
@@ -19,77 +20,89 @@ int reverse_dir(int num) {
 		return 2;
 }
 
-void solve(int ry, int rx, int by, int bx, int cnt, int d) {
+// 구슬을 굴리는 함수
+void solve(int ry, int rx, int by, int bx, int direction, int cnt) {
+	// 10번 이하로만 진행
 	if (cnt > 10)
 		return;
+	// 현재 횟수가 result보다 작을 시에 진행 할 필요X 
 	if (cnt >= result)
 		return;
 
 	bool red_flag = false;
 	bool blue_flag = false;
 
-	int nry = ry + dir[d][0];
-	int nrx = rx + dir[d][1];
+	int nry = ry + dir[direction][0];
+	int nrx = rx + dir[direction][1];
+
+	// 빨간 구슬 움직임
 	while (1) {
-		if (MAP[nry][nrx] == '#')
+		if (arr[nry][nrx] == '#') {
+			nry -= dir[direction][0];
+			nrx -= dir[direction][1];
 			break;
-		else if (MAP[nry][nrx] == 'O') {
+		}
+		else if (arr[nry][nrx] == 'O') {
 			red_flag = true;
 			break;
 		}
 
-		nry = nry + dir[d][0];
-		nrx = nrx + dir[d][1];
+		nry += dir[direction][0];
+		nrx += dir[direction][1];
 	}
-	nry = nry - dir[d][0];
-	nrx = nrx - dir[d][1];
 
-	int nby = by + dir[d][0];
-	int nbx = bx + dir[d][1];
+	int nby = by + dir[direction][0];
+	int nbx = bx + dir[direction][1];
+
+	// 파란 구슬 움직임
 	while (1) {
-		if (MAP[nby][nbx] == '#')
+		if (arr[nby][nbx] == '#') {
+			nby -= dir[direction][0];
+			nbx -= dir[direction][1];
 			break;
-		else if (MAP[nby][nbx] == 'O') {
+		}
+		else if (arr[nby][nbx] == 'O') {
 			blue_flag = true;
 			break;
 		}
 
-		nby = nby + dir[d][0];
-		nbx = nbx + dir[d][1];
+		nby += dir[direction][0];
+		nbx += dir[direction][1];
 	}
-	nby = nby - dir[d][0];
-	nbx = nbx - dir[d][1];
 
+	// 파란 구슬이 구멍에 빠졌을 경우
 	if (blue_flag)
 		return;
 	else {
+		// 빨간 구슬만 빠진 경우
 		if (red_flag) {
 			result = min(result, cnt);
 			return;
 		}
 	}
 
+	// 현재 칸에 빨간색, 파란색 구슬이 같이 존재하는 경우 처리하는 함수
 	if (nry == nby && nrx == nbx) {
-		int red_dist = abs(ry - nry) + abs(rx - nrx);
-		int blue_dist = abs(by - nby) + abs(bx - nbx);
+		// 움직인 거리를 통해 많이 움직였다는 것은 더 멀리 있었다는 뜻이므로
+		int rdist = abs(ry - nry) + abs(rx - nrx);
+		int bdist = abs(by - nby) + abs(bx - nbx);
 
-		if (red_dist > blue_dist) {
-			nry = nry - dir[d][0];
-			nrx = nrx - dir[d][1];
+		if (rdist > bdist) {
+			nry -= dir[direction][0];
+			nrx -= dir[direction][1];
 		}
 		else {
-			nby = nby - dir[d][0];
-			nbx = nbx - dir[d][1];
+			nby -= dir[direction][0];
+			nbx -= dir[direction][1];
 		}
 	}
 
 	for (int i = 0; i < 4; i++) {
-		if (i == d)
-			continue;
-		if (i == reverse_dir(d))
+		// 이전 방향과 반대 방향은 진행 X
+		if (direction == reverse_d(i))
 			continue;
 
-		solve(nry, nrx, nby, nbx, cnt + 1, i);
+		solve(nry, nrx, nby, nbx, i, cnt + 1);
 	}
 }
 
@@ -102,30 +115,24 @@ int main() {
 	string str;
 	for (int i = 0; i < n; i++) {
 		cin >> str;
-		for (int j = 0; j < str.size(); j++) {
-			MAP[i][j] = str[j];
+		for (int j = 0; j < str.length(); j++) {
+			arr[i][j] = str[j];
 
-			if (MAP[i][j] == 'R') {
+			if (arr[i][j] == 'R') {
 				red.first = i;
 				red.second = j;
-				MAP[i][j] = '.';
+				arr[i][j] = '.';
 			}
-			else if (MAP[i][j] == 'B') {
+			else if (arr[i][j] == 'B') {
 				blue.first = i;
 				blue.second = j;
-				MAP[i][j] = '.';
+				arr[i][j] = '.';
 			}
 		}
 	}
 
-	for (int i = 0; i < 4; i++) {
-		int y = red.first;
-		int x = red.second;
-		int yy = blue.first;
-		int xx = blue.second;
-
-		solve(y, x, yy, xx, 1, i);
-	}
+	for (int i = 0; i < 4; i++)
+		solve(red.first, red.second, blue.first, blue.second, i, 1);
 
 	if (result > 10 || result == 987654321)
 		cout << -1 << '\n';
