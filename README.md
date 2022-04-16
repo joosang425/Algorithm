@@ -13,6 +13,7 @@
 #### [실버](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Silver)
 |문제 번호|제목|내용|문제 번호|제목|내용|
 |----------|----------|----------|----------|----------|----------|
+|1012|유기농 배추|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/1012.%E2%80%85%EC%9C%A0%EA%B8%B0%EB%86%8D%E2%80%85%EB%B0%B0%EC%B6%94/%EC%9C%A0%EA%B8%B0%EB%86%8D%E2%80%85%EB%B0%B0%EC%B6%94.cc)|14501|퇴사|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/14501.%E2%80%85%ED%87%B4%EC%82%AC/%ED%87%B4%EC%82%AC.cc)|
 
 #### [골드](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Gold)
 |문제 번호|제목|내용|문제 번호|제목|내용|
