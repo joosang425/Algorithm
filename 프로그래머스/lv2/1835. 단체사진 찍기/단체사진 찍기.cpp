@@ -58,6 +58,7 @@ int solution(int n, vector<string> data) {
     answer = 0;
     arr = data;
     
+    // 조합
     dfs("");
     
     return answer;
