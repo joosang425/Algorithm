@@ -1,58 +1,52 @@
 #include <bits/stdc++.h>
-#define INF 987654321
 using namespace std;
 
-int N, Current = 0;
-int Operand[101];
-int Operator[4];
+const int INF = 987654321;
 
-int Result, Max = -INF, Min = INF;
+int n, number[11], oper[4];
+int high = -INF, low = INF;
 
-void Optimal(int Result, int Idx) {
-	if (Idx == N) {
-		Max = max(Max, Result);
-		Min = min(Min, Result);
+void dfs(int sum, int idx) {
+	if (idx == n) {
+		high = max(high, sum);
+		low = min(low, sum);
 
 		return;
 	}
 
 	for (int i = 0; i < 4; i++) {
-		if (Operator[i] > 0) {
-			Operator[i]--;
-			switch (i) {
-			case 0:
-				Optimal(Result + Operand[Idx], Idx + 1);
-				break;
-			case 1:
-				Optimal(Result - Operand[Idx], Idx + 1);
-				break;
-			case 2:
-				Optimal(Result * Operand[Idx], Idx + 1);
-				break;
-			default:
-				Optimal(Result / Operand[Idx], Idx + 1);
-				break;
-			}
-			Operator[i]++;
+		if (oper[i] > 0) {
+			oper[i]--;
+
+			if (i == 0)
+				dfs(sum + number[idx], idx + 1);
+			else if (i == 1)
+				dfs(sum - number[idx], idx + 1);
+			else if (i == 2)
+				dfs(sum * number[idx], idx + 1);
+			else 
+				dfs(sum / number[idx], idx + 1);
+
+			oper[i]++;
 		}
 	}
 }
 
 int main() {
 	ios::sync_with_stdio(0);
-	cin.tie(0);	cout.tie(0);
+	cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; i++)
-		cin >> Operand[i];
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		cin >> number[i];
 
 	for (int i = 0; i < 4; i++)
-		cin >> Operator[i];
+		cin >> oper[i];
 
-	Optimal(Operand[0], 1);
+	// 조합
+	dfs(number[0], 1);
 
-	cout << Max << '\n';
-	cout << Min;
+	cout << high << '\n' << low;
 
 	return 0;
 }
