@@ -1,53 +1,56 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int Ability[21][21], Selected[21], N, Result = 987654321;
+int n, result = 987654321, arr[20][20];
+bool selected[20];
 
-void Difference(int Current, int Member) {
-	vector<int> Start, Link;
-	int Start_Score = 0, Link_Score = 0;
+void dfs(int idx, int cnt) {
+	// 두 팀으로 나눴을 경우 최솟값 계산
+	if (cnt == n / 2) {
+		int start = 0, link = 0;
 
-	if (Member == N / 2) {
-		for (int i = 0; i < N; i++) {
-			if (Selected[i])
-				Start.push_back(i);
-			else
-				Link.push_back(i);
-		}
-
-		for (int i = 0; i < N / 2; i++) {
-			for (int j = 0; j < N / 2; j++) {
-				Start_Score += Ability[Start[i]][Start[j]];
-				Link_Score += Ability[Link[i]][Link[j]];
+		// 둘 다 같은 값인 경우 같은 팀
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				if (selected[i] && selected[j]) {
+					start += arr[i][j];
+					start += arr[j][i];
+				}
+				else if (!selected[i] && !selected[j]) {
+					link += arr[i][j];
+					link += arr[j][i];
+				}
 			}
 		}
 
-		Result = min(Result, abs(Start_Score - Link_Score));
-
+		result = min(result, abs(start - link));
 		return;
 	}
 
-	for (int i = Current; i < N; i++) {
-		if (!Selected[i]) {
-			Selected[i] = true;
-			Difference(i, Member + 1);
-			Selected[i] = false;
-		}
+	for (int i = idx; i < n; i++) {
+		if (selected[i])
+			continue;
+
+		selected[i] = true;
+		dfs(i, cnt + 1);
+		selected[i] = false;
 	}
 }
 
 int main() {
 	ios::sync_with_stdio(0);
-	cin.tie(0);	cout.tie(0);
+	cin.tie(0);
 
-	cin >> N;
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
-			cin >> Ability[i][j];
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> arr[i][j];
+		}
+	}
 
-	Difference(0, 0);
+	dfs(0, 0);
 
-	cout << Result;
+	cout << result << '\n';
 
 	return 0;
 }
