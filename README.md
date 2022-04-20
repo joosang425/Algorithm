@@ -26,7 +26,7 @@
 |14499|주사위 굴리기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14499.%E2%80%85%EC%A3%BC%EC%82%AC%EC%9C%84%E2%80%85%EA%B5%B4%EB%A6%AC%EA%B8%B0/%EC%A3%BC%EC%82%AC%EC%9C%84%E2%80%85%EA%B5%B4%EB%A6%AC%EA%B8%B0.cc)|14500|테트로미노|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14500.%E2%80%85%ED%85%8C%ED%8A%B8%EB%A1%9C%EB%AF%B8%EB%85%B8/%ED%85%8C%ED%8A%B8%EB%A1%9C%EB%AF%B8%EB%85%B8.cc)|
 |14502|연구소|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14502.%E2%80%85%EC%97%B0%EA%B5%AC%EC%86%8C/%EC%97%B0%EA%B5%AC%EC%86%8C.cc)|14503|로봇 청소기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14503.%E2%80%85%EB%A1%9C%EB%B4%87%E2%80%85%EC%B2%AD%EC%86%8C%EA%B8%B0/%EB%A1%9C%EB%B4%87%E2%80%85%EC%B2%AD%EC%86%8C%EA%B8%B0.cc)|
 |14890|경사로|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14890.%E2%80%85%EA%B2%BD%EC%82%AC%EB%A1%9C/%EA%B2%BD%EC%82%AC%EB%A1%9C.cc)|14891|톱니바퀴|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/14891.%E2%80%85%ED%86%B1%EB%8B%88%EB%B0%94%ED%80%B4/%ED%86%B1%EB%8B%88%EB%B0%94%ED%80%B4.cc)|
-
+|15683|감시|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/15683.%E2%80%85%EA%B0%90%EC%8B%9C/%EA%B0%90%EC%8B%9C.cc)|
 
 #### [플레](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Platinum)
 |문제 번호|제목|내용|문제 번호|제목|내용|
