@@ -1,66 +1,67 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int R, C, M, r, c, s, d, z, result, shark_cnt;
-
-struct Shark {
-	bool exist;
+struct shark {
 	int speed;
 	int direction;
 	int size;
+	bool live;
 };
 
-Shark arr[101][101], temp[101][101];
+shark arr[101][101], temp[101][101];
+int R, C, m, r, c, s, d, z, result;
+int dir[5][2] = { {0, 0}, {-1,0},{1,0},{0,1},{0, -1} };
 
-// 1: 위, 2: 아래, 3: 오른쪽, 4: 왼쪽
+void find_shark(int col) {
+	// 현재 열에서 상어를 찾으면 false로 표시
+	for (int i = 1; i <= R; i++) {
+		if (arr[i][col].live) {
+			result += arr[i][col].size;
+			arr[i][col].live = false;
 
-void shark_move() {
+			break;
+		}
+	}
+}
+
+void move_shark() {
 	for (int i = 1; i <= R; i++) {
 		for (int j = 1; j <= C; j++) {
-			if (arr[i][j].exist) {
-				int move_cnt = arr[i][j].speed;
-				int dir = arr[i][j].direction;
+			if (arr[i][j].live) {
 				int y = i;
 				int x = j;
+				int speed = arr[i][j].speed;
+				int direction = arr[i][j].direction;
 
-				while (move_cnt--) {
-					if (dir == 1 && y == 1)
-						dir = 2;
-					else if (dir == 2 && y == R)
-						dir = 1;
-					else if (dir == 3 && x == C)
-						dir = 4;
-					else if (dir == 4 && x == 1)
-						dir = 3;
+				// 상어 이동 
+				while (speed--) {
+					// 끝에 온 경우 방향을 바꿔줌
+					if (direction == 1 && y == 1)
+						direction = 2;
+					else if (direction == 2 && y == R)
+						direction = 1;
+					else if (direction == 3 && x == C)
+						direction = 4;
+					else if (direction == 4 && x == 1)
+						direction = 3;
 
-					switch (dir) {
-					case 1:
-						y--;
-						break;
-					case 2:
-						y++;
-						break;
-					case 3:
-						x++;
-						break;
-					case 4:
-						x--;
-						break;
-					}
+					y += dir[direction][0];
+					x += dir[direction][1];
 				}
 
-				if (temp[y][x].exist) {
+				// 현재 위치에 이미 상어가 있는 경우 크기를 비교
+				if (temp[y][x].live) {
 					if (temp[y][x].size < arr[i][j].size) {
-						temp[y][x].direction = dir;
 						temp[y][x].size = arr[i][j].size;
 						temp[y][x].speed = arr[i][j].speed;
+						temp[y][x].direction = direction;
 					}
 				}
 				else {
-					temp[y][x].exist = true;
-					temp[y][x].direction = dir;
 					temp[y][x].size = arr[i][j].size;
 					temp[y][x].speed = arr[i][j].speed;
+					temp[y][x].direction = direction;
+					temp[y][x].live = true;
 				}
 			}
 		}
@@ -70,58 +71,41 @@ void shark_move() {
 		for (int j = 1; j <= C; j++) {
 			arr[i][j] = temp[i][j];
 
-			if (temp[i][j].exist) {
-				temp[i][j].exist = false;
+			if (temp[i][j].live) {
+				temp[i][j].live = false;
 				temp[i][j].direction = 0;
-				temp[i][j].size = 0;
 				temp[i][j].speed = 0;
+				temp[i][j].size = 0;
 			}
 		}
 	}
 }
 
-void solve(int cur) {
-	if (cur == C)
-		return;
 
-	cur += 1;
-	for (int i = 1; i <= R; i++) {
-		if (arr[i][cur].exist) {
-			result += arr[i][cur].size;
-
-			arr[i][cur].exist = false;
-			arr[i][cur].speed = 0;
-			arr[i][cur].direction = 0;
-			arr[i][cur].size = 0;
-
-			shark_cnt--;
-			break;
-		}
-	}
-	if (shark_cnt != 0)
-		shark_move();
-
-	solve(cur);
-}
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 
-	cin >> R >> C >> M;
-
-	// r,c: 상어의 위치, s: 속력, d: 이동 방향, z: 크기
-	for (int i = 0; i < M; i++) {
+	cin >> R >> C >> m;
+	for (int i = 0; i < m; i++) {
 		cin >> r >> c >> s >> d >> z;
 
-		arr[r][c].exist = true;
-		arr[r][c].speed = s;
+		if (d == 1 || d == 2)
+			arr[r][c].speed = s % ((R - 1) * 2);
+		else if (d == 3 || d == 4) 
+			arr[r][c].speed = s % ((C - 1) * 2);
+
 		arr[r][c].direction = d;
 		arr[r][c].size = z;
-		shark_cnt++;
+		arr[r][c].live = true;
 	}
 
-	solve(0);
+	// 열 만큼 for문 진행
+	for (int i = 1; i <= C; i++) {
+		find_shark(i);
+		move_shark();
+	}
 
 	cout << result << '\n';
 
