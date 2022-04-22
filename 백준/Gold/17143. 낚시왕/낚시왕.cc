@@ -91,6 +91,7 @@ int main() {
 	for (int i = 0; i < m; i++) {
 		cin >> r >> c >> s >> d >> z;
 
+		// (R-1)*2하면 원래대로 돌아오기 때문에 %를 통해 s값을 줄여준다.
 		if (d == 1 || d == 2)
 			arr[r][c].speed = s % ((R - 1) * 2);
 		else if (d == 3 || d == 4) 
