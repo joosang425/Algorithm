@@ -29,6 +29,7 @@
 |15683|감시|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/15683.%E2%80%85%EA%B0%90%EC%8B%9C/%EA%B0%90%EC%8B%9C.cc)|15684|사다리 조작|[cpp](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Gold/15684.%E2%80%85%EC%82%AC%EB%8B%A4%EB%A6%AC%E2%80%85%EC%A1%B0%EC%9E%91)|
 |15685|드래곤 커브|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/15685.%E2%80%85%EB%93%9C%EB%9E%98%EA%B3%A4%E2%80%85%EC%BB%A4%EB%B8%8C/%EB%93%9C%EB%9E%98%EA%B3%A4%E2%80%85%EC%BB%A4%EB%B8%8C.cc)|15686|치킨 배달|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/15686.%E2%80%85%EC%B9%98%ED%82%A8%E2%80%85%EB%B0%B0%EB%8B%AC/%EC%B9%98%ED%82%A8%E2%80%85%EB%B0%B0%EB%8B%AC.cc)|
 |16234|인구 이동|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/16234.%E2%80%85%EC%9D%B8%EA%B5%AC%E2%80%85%EC%9D%B4%EB%8F%99/%EC%9D%B8%EA%B5%AC%E2%80%85%EC%9D%B4%EB%8F%99.cc)|16235|나무 재테크|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/16235.%E2%80%85%EB%82%98%EB%AC%B4%E2%80%85%EC%9E%AC%ED%85%8C%ED%81%AC/%EB%82%98%EB%AC%B4%E2%80%85%EC%9E%AC%ED%85%8C%ED%81%AC.cc)|
+|16236|아기 상어|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Gold/16236.%E2%80%85%EC%95%84%EA%B8%B0%E2%80%85%EC%83%81%EC%96%B4/%EC%95%84%EA%B8%B0%E2%80%85%EC%83%81%EC%96%B4.cc)|
 
 #### [플레](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Platinum)
 |문제 번호|제목|내용|문제 번호|제목|내용|
