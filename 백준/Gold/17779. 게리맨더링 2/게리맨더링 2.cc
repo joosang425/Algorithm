@@ -1,103 +1,81 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, arr[21][21], temp[21][21], result = 987654321;
+int n, result = 987654321, arr[20][20], space[20][20];
 
-vector<pair<int, int>> v;
+int dir[4][2] = { {-1,0}, {0,1},{1,0},{0,-1} };
 
-int calc() {
-	int score[6] = { 0, };
+void dfs(int y, int x, int value) {
+	if (y < 0 || y >= n || x < 0 || x >= n)
+		return;
+	if (space[y][x] != 0)
+		return;
 
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			score[temp[i][j]] += arr[i][j];
-		}
-	}
+	space[y][x] = value;
 
-	sort(score, score + 6);
-	
-	int result = score[5] - score[1];
+	dfs(y - 1, x, value);
+	dfs(y + 1, x, value);
+	dfs(y, x - 1, value);
+	dfs(y, x + 1, value);
+ }
 
-	return result;
-}
+int find() {
+	for (int y = 0; y <= n - 3; y++) {
+		for (int x = 0; x <= n - 2; x++) {
+			for (int d1 = 1; y + d1 <= n - 2 && x - d1 >= 0; d1++) {
+				for (int d2 = 1; y + d1 + d2 < n && x + d2 < n; d2++) {
+					memset(space, 0, sizeof(space));
 
-void marking() {
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			temp[i][j] = 5;
-		}
-	}
-
-	//	1번 선거구
-	int cnt = 0;
-	for (int i = 1; i < v[1].first; i++) {
-		if (i >= v[0].first)
-			cnt++;
-		for (int j = 1; j <= v[0].second - cnt; j++)
-			temp[i][j] = 1;
-	}
-
-	//	2번 선거구
-	cnt = 0;
-	for (int i = 1; i <= v[2].first; i++) {
-		if (i > v[0].first)
-			cnt++;
-		for (int j = v[0].second + 1 + cnt; j <= n; j++)
-			temp[i][j] = 2;
-	}
-
-	//	3번 선거구
-	cnt = 0;
-	for (int i = n; i >= v[1].first; i--) {
-		if (i < v[3].first)
-			cnt++;
-		for (int j = 1; j < v[3].second - cnt; j++)
-			temp[i][j] = 3;
-	}
-
-	//	4번 선거구
-	cnt = 0;
-	for (int i = n; i > v[2].first; i--) {
-		if (i <= v[3].first)
-			cnt++;
-		for (int j = v[3].second + cnt; j <= n; j++)
-			temp[i][j] = 4;
-	}
-}
-
-bool isTrue(int x, int y, int d1, int d2) {
-	if (x + d1 > n || y - d1 < 1)
-		return false;
-	if (x + d2 > n || y + d2 > n)
-		return false;
-	if (x + d1 + d2 > n || y + d2 - d1 < 1)
-		return false;
-
-	return true;
-}
-
-// 기준점 정하기 
-void solve() {
-	for (int x = 1; x <= n - 2; x++) {
-		for (int y = 2; y <= n - 2; y++) {
-			for (int d1 = 1; d1 <= n; d1++) {
-				for (int d2 = 1; d2 <= n; d2++) {
-					if (isTrue(x, y, d1, d2)) {
-						v.clear();
-
-						v.push_back({ x,y });
-						v.push_back({ x + d1, y - d1 });
-						v.push_back({ x + d2, y + d2 });
-						v.push_back({ x + d1 + d2, y + d2 - d1 });
-
-						marking();
-
-						result = min(result, calc());
+					// 5번 선거구 경계선 기록하기
+					for (int d = 0; d <= d1; d++) {
+						space[y + d][x - d] = 5;
+						space[y + d2 + d][x + d2 - d] = 5;
 					}
+
+					for (int d = 0; d <= d2; d++) {
+						space[y + d][x + d] = 5;
+						space[y + d1 + d][x - d1 + d] = 5;
+					}
+
+					// 각 선거구 기록
+					for (int i = y - 1; i >= 0; i--)
+						space[i][x] = 1;
+					for (int j = x + d2 + 1; j < n; j++)
+						space[y + d2][j] = 2;
+					for (int j = x - d1 - 1; j >= 0; j--)
+						space[y + d1][j] = 3;
+					for (int i = y + d1 + d2 + 1; i < n; i++)
+						space[i][x - d1 + d2] = 4;
+
+					// dfs를 이용하여 선거구 번호 채우기
+					dfs(0, 0, 1);
+					dfs(0, n - 1, 2);
+					dfs(n - 1, 0, 3);
+					dfs(n - 1, n - 1, 4);
+
+					int temp[6] = { 0, };
+
+					for (int i = 0; i < n; i++) {
+						for (int j = 0; j < n; j++) {
+							temp[space[i][j]] += arr[i][j];
+						}
+					}
+
+					temp[5] += temp[0];
+					int large = 0, low = 987654321;
+
+					for (int i = 1; i <= 5; i++) {
+						large = max(large, temp[i]);
+						low = min(low, temp[i]);
+					}
+
+					result = min(result, large - low);
 				}
 			}
 		}
 	}
+
+	return result;
 }
 
 int main() {
@@ -105,15 +83,14 @@ int main() {
 	cin.tie(0);
 
 	cin >> n;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
 			cin >> arr[i][j];
 		}
 	}
 
-	solve();
-
-	cout << result << '\n';
+	cout << find() << '\n';
 
 	return 0;
 }
