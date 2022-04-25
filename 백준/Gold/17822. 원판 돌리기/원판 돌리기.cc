@@ -1,107 +1,91 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, t, x, d, k, result, arr[51][50], temp[51][50];
-bool visited;
+int n, m, t, x, d, k, sum, cnt, result;
+deque<int> arr[51];
 
-void copy(int arr1[][50], int arr2[][50]) {
-	for (int i = 1; i <= 50; i++) {
-		for (int j = 0; j < 50; j++) {
-			arr1[i][j] = arr2[i][j];
-		}
+void circle_move(int idx, int dir) {
+	// 시계 방향
+	if (dir == 0) {
+		int num = arr[idx].back();
+		arr[idx].pop_back();
+
+		arr[idx].push_front(num);
 	}
-}
-
-void move(int idx, int dir, int cnt) {
-	//	반시계 방향
-	if (dir == 1) {
-		for (int i = 0; i < cnt; i++) {
-			int temp = arr[idx][0];
-
-			for (int i = 0; i < m - 1; i++)
-				arr[idx][i] = arr[idx][i + 1];
-
-			arr[idx][m - 1] = temp;
-		}
-	}
-	//	시계 방향
+	// 반시계 방향
 	else {
-		for (int i = 0; i < cnt; i++) {
-			int temp = arr[idx][m - 1];
+		int num = arr[idx].front();
+		arr[idx].pop_front();
 
-			for (int i = m - 1; i > 0; i--)
-				arr[idx][i] = arr[idx][i - 1];
-
-			arr[idx][0] = temp;
-		}
+		arr[idx].push_back(num);
 	}
 }
 
-void remove_num(int cur) {
-	for (int i = 0; i < m; i++) {
-		if (arr[cur][i] == 0)
+bool near_remove() {
+	bool flag = false;
+	sum = cnt = 0;
+
+	deque<int> temp[51];
+
+	for (int i = 1; i <= n; i++)
+		temp[i] = arr[i];
+
+	// 인접한 숫자가 있는 경우 true 반환
+	for (int i = 1; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (!arr[i][j])
+				continue;
+
+			if (arr[i][j] == arr[i][(j + 1) % m]) {
+				temp[i][j] = temp[i][(j + 1) % m] = 0;
+				flag = true;
+			}
+			if (arr[i][j] == arr[i + 1][j]) {
+				temp[i][j] = temp[i + 1][j] = 0;
+				flag = true;
+			}
+		}
+	}
+
+	// 마지막 행 원판
+	for (int j = 0; j < m; j++) {
+		if (!arr[n][j])
 			continue;
 
-		if (i == m - 1) {
-			if (arr[cur][i] == arr[cur][0]) {
-				temp[cur][i] = temp[cur][0] = 0;
-				visited = true;
-			}
-		}
-		else {
-			if (arr[cur][i] == arr[cur][i + 1]) {
-				temp[cur][i] = temp[cur][i + 1] = 0;
-				visited = true;
-			}
+		if (arr[n][j] == arr[n][(j + 1) % m]) {
+			temp[n][j] = temp[n][(j + 1) % m] = 0;
+			flag = true;
 		}
 	}
 
-	if (cur < n) {
-		for (int i = 0; i < m; i++) {
-			if (arr[cur][i] == 0)
-				continue;
-
-			if (arr[cur][i] == arr[cur + 1][i]) {
-				temp[cur][i] = temp[cur + 1][i] = 0;
-				visited = true;
-			}
-		}
-	}
-}
-
-void calc(double avg) {
+	// 원판에 적힌 숫자의 합과 갯수 구하기
 	for (int i = 1; i <= n; i++) {
+		arr[i] = temp[i];
+
 		for (int j = 0; j < m; j++) {
-			if (!temp[i][j])
-				continue;
+			sum += temp[i][j];
 
-			if (avg < (double)temp[i][j])
-				temp[i][j]--;
-			else if (avg > (double)temp[i][j])
-				temp[i][j]++;
-		}
-	}
-}
-
-void check() {
-	double sum = 0;
-	int cnt = 0;
-
-	for (int i = 1; i <= n; i++) {
-		for (int j = 0; j < m; j++) {
-			if (temp[i][j] != 0)
+			if (temp[i][j])
 				cnt++;
-
-			sum += (double)temp[i][j];
 		}
-
-		remove_num(i);
 	}
 
-	if (!visited)
-		calc(sum / cnt);
+	return flag;
+}
 
-	visited = false;
+// 평균과 비교하여 숫자 변경
+void turn_circle(double num) {
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < m; j++) {
+			if (!arr[i][j])
+				continue;
+
+			if ((double)arr[i][j] < num)
+				arr[i][j]++;
+			else if ((double)arr[i][j] > num)
+				arr[i][j]--;
+		}
+	}
 }
 
 int main() {
@@ -109,25 +93,33 @@ int main() {
 	cin.tie(0);
 
 	cin >> n >> m >> t;
+
+	int num;
 	for (int i = 1; i <= n; i++) {
 		for (int j = 0; j < m; j++) {
-			cin >> arr[i][j];
+			cin >> num;
+
+			arr[i].push_back(num);
 		}
 	}
 
 	for (int i = 0; i < t; i++) {
 		cin >> x >> d >> k;
 
-		int tempx = x;
+		int temp_x = x;
 
-		while (x <= n) {
-			move(x, d, k);
-			x += tempx;
+		// x의 배수에 해당하는 원판 돌리기
+		for (int j = x; j <= n; j += temp_x) {
+			for (int s = 0; s < k; s++)
+				circle_move(j, d);
 		}
 
-		copy(temp, arr);
-		check();
-		copy(arr, temp);
+		// 인접한 숫자가 있는지 확인
+		if (!near_remove()) {
+			double value = (double)sum / cnt;
+
+			turn_circle(value);
+		}
 	}
 
 	for (int i = 1; i <= n; i++) {
