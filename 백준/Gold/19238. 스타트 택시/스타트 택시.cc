@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct passenger {
+struct info {
 	int sy;
 	int sx;
 	int dy;
@@ -9,19 +9,19 @@ struct passenger {
 	bool isArrive;
 };
 
-passenger p[400];
-int n, m, oil, distant, arr[20][20];
+int n, m, gas, arr[20][20];
+int d[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+
+bool visited[20][20];
+info passenger[400];
 pair<int, int> taxi;
 
-bool cant;
-int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+vector<pair<pair<int, int>, pair<int, int>>> candidate;
 
-int bfs(int y, int x, int dy, int dx) {
-	bool visited[20][20] = { false, };
-
+int bfs(int sy, int sx, int dy, int dx) {
 	queue<pair<pair<int, int>, int>> q;
-	q.push({ {y,x}, 0 });
-	visited[y][x] = true;
+	q.push({ {sy,sx},0 });
+	visited[sy][sx] = true;
 
 	while (!q.empty()) {
 		int cy = q.front().first.first;
@@ -29,20 +29,20 @@ int bfs(int y, int x, int dy, int dx) {
 		int cnt = q.front().second;
 		q.pop();
 
+		if (cnt > gas)
+			continue;
 		if (cy == dy && cx == dx)
 			return cnt;
 
 		for (int i = 0; i < 4; i++) {
-			int ny = cy + dir[i][0];
-			int nx = cx + dir[i][1];
+			int ny = cy + d[i][0];
+			int nx = cx + d[i][1];
 
-			if (ny < 0 || ny >= n || nx < 0 || nx >= n)
-				continue;
-			if (visited[ny][nx] || arr[ny][nx])
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n || visited[ny][nx] || arr[ny][nx])
 				continue;
 
-			q.push({ {ny,nx},cnt + 1 });
 			visited[ny][nx] = true;
+			q.push({ {ny,nx}, cnt + 1 });
 		}
 	}
 
@@ -50,113 +50,99 @@ int bfs(int y, int x, int dy, int dx) {
 }
 
 bool cmp(pair<pair<int, int>, pair<int, int>> a, pair<pair<int, int>, pair<int, int>> b) {
-	if (a.first.second == b.first.second) {
+	if (a.first.first == b.first.first) {
 		if (a.second.first == b.second.first)
 			return a.second.second < b.second.second;
 
 		return a.second.first < b.second.first;
 	}
 
-	return a.first.second < b.first.second;
+	return a.first.first < b.first.first;
 }
 
-int solve() {
-	vector<pair<pair<int, int>, pair<int, int>>> v;
-
+pair<int,int> solve() {
+	// 태울 수 있는 거리인 승객 저장
 	for (int i = 0; i < m; i++) {
-		if (p[i].isArrive)
+		memset(visited, false, sizeof(visited));
+
+		if (passenger[i].isArrive)
 			continue;
 
-		int re = bfs(taxi.first, taxi.second, p[i].sy, p[i].sx);
-		if (re == -1) {
-			cant = true;
-			return -1;
-		}
+		int dis = bfs(taxi.first, taxi.second, passenger[i].sy, passenger[i].sx);
 
-		v.push_back({ {i, re}, {p[i].sy, p[i].sx} });
+		if (dis != -1)
+			candidate.push_back({ {dis, i},{passenger[i].sy, passenger[i].sx} });
 	}
 
-	if (v.empty())
-		return -1;
+	if (candidate.empty())
+		return { -1, -1 };
 
-	sort(v.begin(), v.end(), cmp);
+	sort(candidate.begin(), candidate.end(), cmp);
 
-	distant = v[0].first.second;
-	return v[0].first.first;
+	return { candidate[0].first.first, candidate[0].first.second };
 }
 
 int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 
-	// n: 격자의 크기, m: 승객의 수, oil: 초기 연료
-	cin >> n >> m >> oil;
-
+	cin >> n >> m >> gas;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			cin >> arr[i][j];
 		}
 	}
 
-	// 택시의 위치
 	cin >> taxi.first >> taxi.second;
+	taxi.first--, taxi.second--;
 
-	taxi.first--;
-	taxi.second--;
-
-	// arr 배열에 각 승객의 출발지의 목적지 표시 
 	int sy, sx, dy, dx;
+
 	for (int i = 0; i < m; i++) {
 		cin >> sy >> sx >> dy >> dx;
+		sy--, sx--, dy--, dx--;
 
-		sy--;
-		sx--;
-		dy--;
-		dx--;
-
-		p[i].sy = sy, p[i].sx = sx, p[i].dy = dy, p[i].dx = dx;
-		p[i].isArrive = false;
+		passenger[i] = { sy,sx,dy,dx, false };
 	}
 
-	// next: 현재 택시에서 가장 가까운 거리의 승객
-	// distant: 승객과의 거리
-	while (1) {
-		int next = solve();
+	for (int i = 0; i < m; i++) {
+		candidate.clear();
 
-		if (next == -1) {
-			if (cant)
-				oil = -1;
+		// 현재 택시 위치에서 갈 수 있는 곳 저장
+		pair<int,int> next = solve();
 
-			break;
-		}
-
-		if (oil - distant < 0) {
-			oil = -1;
+		// 현재 택시 위치에서 정해진 연료로 갈 수 없는 경우
+		// 목적지까지 가야하므로 같아도 종료
+		if (next.first >= gas || next.second == -1) {
+			gas = -1;
 			break;
 		}
 		else
-			oil -= distant;
-		
-		taxi.first = p[next].sy, taxi.second = p[next].sx;
+			gas -= next.first;
 
-		int des_distant = bfs(taxi.first, taxi.second, p[next].dy, p[next].dx);
-		if (des_distant == -1) {
-			oil = -1;
+		taxi.first = passenger[next.second].sy, taxi.second = passenger[next.second].sx;
+
+		memset(visited, false, sizeof(visited));
+		// 현재 위치에서 목적지까지의 거리와 위치 구하기
+		int des_dis = bfs(taxi.first, taxi.second, passenger[next.second].dy, passenger[next.second].dx);
+
+		// 목적지까지 정해진 연료로 갈 수 없는 경우
+		// or 목적지로 갈 수 없는 경우
+		// 같은 경우에는 도착 후 충전이 가능하므로 클 때만 종료
+		if (des_dis > gas || des_dis == -1) {
+			gas = -1;
 			break;
 		}
-
-		if (oil - des_distant < 0) {
-			oil = -1;
-			break;
-		}
-		else {
-			taxi.first = p[next].dy, taxi.second = p[next].dx;
-			oil += des_distant;
-			p[next].isArrive = true;
-		}
+		else
+			gas += des_dis;
+	
+		// 택시 위치를 변경 및 승객 도착 기록
+		taxi.first = passenger[next.second].dy;
+		taxi.second = passenger[next.second].dx;
+		passenger[next.second].isArrive = true;
 	}
 
-	cout << oil << '\n';
+	cout << gas << '\n';
 
 	return 0;
 }
