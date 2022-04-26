@@ -1,138 +1,147 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct shark {
+struct info {
 	int y;
 	int x;
 	int dir;
-	bool isExist;
+	bool live;
 };
 
-struct smell {
-	int value;
-	int num;
-};
+int d[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
 
-smell arr[20][20];
-shark info[401];
-int result, cany, canx, cand;
-int n, m, k;
+// shark_arr: 상어의 현재 위치를 저장하는 배열, shark_dir: 상어의 이동 방향별로 우선 순위 저장하는 배열
+int n, m, k, result, shark_arr[20][20], shark_dir[401][4][4];
+// 현재 격자에 남아 있는 상어의 냄새와 번호
+pair<int, int> smell[20][20];
 
-int direction[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
-int dir_info[401][4][4];
+// 상어의 정보 저장
+info shark[401];
 
-void spray() {
-	for (int i = 1; i <= m; i++) {
-		if (!info[i].isExist)
-			continue;
+// 1번 상어만 남아있는지 확인하는 함수
+bool live_check() {
+	if (!shark[1].live)
+		return false;
 
-		int y = info[i].y;
-		int x = info[i].x;
-
-		arr[y][x].num = i;
-		arr[y][x].value = k;
+	for (int i = 2; i <= m; i++) {
+		if (shark[i].live)
+			return false;
 	}
+
+	return true;
 }
 
-void smell_down() {
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			if (arr[i][j].num != 0) {
-				arr[i][j].value--;
-
-				if (arr[i][j].value == 0)
-					arr[i][j].num = 0;
-			}
-		}
-	}
-}
-
+// 상어 이동
 void shark_move() {
-	vector<pair<int, pair<int, int>>> v;
+	// 동시에 이동을 처리하기 위한 배열
+	int temp[20][20] = { 0, };
 
 	for (int i = 1; i <= m; i++) {
-		if (!info[i].isExist)
+		// 상어가 격자에 없으면 진행 x
+		if (!shark[i].live)
 			continue;
 
-		int y = info[i].y;
-		int x = info[i].x;
-		int dir = info[i].dir;
+		int y = shark[i].y;
+		int x = shark[i].x;
+		int dir = shark[i].dir;
 
-		bool isFind = false;
+		bool flag = false;
+		int temp_dir = -1;
 
 		for (int j = 0; j < 4; j++) {
-			int num = dir_info[i][dir][j];
-
-			int ny = y + direction[num][0];
-			int nx = x + direction[num][1];
-
+			int ny = y + d[shark_dir[i][dir][j]][0];
+			int nx = x + d[shark_dir[i][dir][j]][1];
+			
+			// 격자를 벗어나거나 냄새가 남아있다면 갈 수 없음
 			if (ny < 0 || ny >= n || nx < 0 || nx >= n)
 				continue;
-			if (arr[ny][nx].value != 0)
-				continue;
-
-			isFind = true;
-
-			if (arr[ny][nx].num != 0) {
-				// 어떤 상어가 있는 경우
-
-				// 현재 있는 상어보다 인덱스가 큰 경우
-				if (arr[ny][nx].num < i)
-					info[i].isExist = false;
-				// 현재 있는 상어보다 인덱스가 작은 경우 바꿔줌
-				else {
-					info[arr[ny][nx].num].isExist = false;
-
-					arr[ny][nx].num = i;
-					info[i].y = ny;
-					info[i].x = nx;
-					info[i].dir = num;
+			if (smell[ny][nx].first != 0) {
+				// 자신의 냄새가 남아있는 칸을 기록하기 위한 조건문
+				if (smell[ny][nx].first == i) {
+					if (temp_dir == -1)
+						temp_dir = j;
 				}
+
+				continue;
+			}
+
+			// 여기까지 왔으면 이동할 수 있는 방향을 찾았다는 뜻
+			flag = true;
+
+			// 현재 격자에 상어가 있다면 상어 번호를 비교하여 작은 번호의 상어만 남긴다.
+			if (temp[ny][nx] != 0) {
+				if (temp[ny][nx] > i) {
+					shark[i].y = ny;
+					shark[i].x = nx;
+					shark[i].dir = shark_dir[i][dir][j];
+
+					shark[temp[ny][nx]].live = false;
+					temp[ny][nx] = i;
+				}
+				else 
+					shark[i].live = false;
 			}
 			else {
-				// 아무 상어도 없는 경우
-				arr[ny][nx].num = i;
-				info[i].y = ny;
-				info[i].x = nx;
-				info[i].dir = num;
+				shark[i].y = ny;
+				shark[i].x = nx;
+				shark[i].dir = shark_dir[i][dir][j];
+
+				temp[ny][nx] = i;
 			}
 
 			break;
 		}
 
-		if (!isFind) {
-			for (int j = 0; j < 4; j++) {
-				int num = dir_info[i][dir][j];
+		// 냄새가 없는 칸이 없는 경우 자신의 냄새가 있는 칸으로 이동
+		if (!flag) {
+			int ny = y + d[shark_dir[i][dir][temp_dir]][0];
+			int nx = x + d[shark_dir[i][dir][temp_dir]][1];
 
-				int ny = y + direction[num][0];
-				int nx = x + direction[num][1];
+			if (temp[ny][nx] != 0) {
+				if (temp[ny][nx] > i) {
+					shark[i].y = ny;
+					shark[i].x = nx;
+					shark[i].dir = shark_dir[i][dir][temp_dir];
 
-				if (ny < 0 || ny >= n || nx < 0 || nx >= n)
-					continue;
-
-				if (arr[ny][nx].num == i) {
-					info[i].y = ny;
-					info[i].x = nx;
-					info[i].dir = num;
-
-					break;
+					shark[temp[ny][nx]].live = false;
+					temp[ny][nx] = i;
 				}
+				else
+					shark[i].live = false;
+			}
+			else {
+				shark[i].y = ny;
+				shark[i].x = nx;
+				shark[i].dir = shark_dir[i][dir][temp_dir];
+
+				temp[ny][nx] = i;
 			}
 		}
 	}
 
-	smell_down();
-	spray();
-}
+	// 옮겨진 위치에 상어의 냄새 남기기
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (temp[i][j] != 0)
+				smell[i][j] = { temp[i][j], k + 1 };
 
-bool isCheck() {
-	for (int i = 2; i <= m; i++) {
-		if (info[i].isExist) {
-			return true;
+			shark_arr[i][j] = temp[i][j];
 		}
 	}
+}
 
-	return false;
+// 상어의 냄새를 줄여준다.
+void smell_down() {
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (smell[i][j].second != 0) {
+				smell[i][j].second--;
+
+				if (smell[i][j].second == 0)
+					smell[i][j].first = 0;
+			}
+		}
+	}
 }
 
 int main() {
@@ -140,54 +149,46 @@ int main() {
 	cin.tie(0);
 
 	cin >> n >> m >> k;
-
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			cin >> arr[i][j].num;
+			cin >> shark_arr[i][j];
 
-			if (arr[i][j].num != 0) {
-				int x = arr[i][j].num;
+			if (shark_arr[i][j] != 0) {
+				shark[shark_arr[i][j]] = { i,j,0,true };
 
-				arr[i][j].value = k;
-
-				info[x].y = i;
-				info[x].x = j;
-				info[x].isExist = true;
+				smell[i][j] = { shark_arr[i][j], k };
 			}
 		}
 	}
 
-	// 1: 상, 2: 하, 3: 좌, 4: 우
 	int num;
 	for (int i = 1; i <= m; i++) {
 		cin >> num;
 
-		num--;
-
-		info[i].dir = num;
+		shark[i].dir = num - 1;
 	}
 
-	// 상, 하, 좌, 우
-	for (int i = 0; i < m; i++) {
+	for (int i = 1; i <= m; i++) {
 		for (int j = 0; j < 4; j++) {
 			for (int z = 0; z < 4; z++) {
 				cin >> num;
 
-				num--;
-
-				dir_info[i + 1][j][z] = num;
+				shark_dir[i][j][z] = num - 1;
 			}
 		}
 	}
 
-	while (isCheck()) {
-		result++;
-		if (result > 1000) {
+	while (1) {
+		if (live_check())
+			break;
+		if (result >= 1000) {
 			result = -1;
 			break;
 		}
 
+		result++;
 		shark_move();
+		smell_down();
 	}
 
 	cout << result << '\n';
