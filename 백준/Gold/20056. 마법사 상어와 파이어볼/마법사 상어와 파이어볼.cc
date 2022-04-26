@@ -1,122 +1,89 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct fireball {
-	int weight;
-	int speed;
-	int direction;
+// 파이어볼 정보
+struct info {
+	int m;
+	int s;
+	int d;
 };
 
-struct temp_fireball {
-	int y;
-	int x;
-	int weight;
-	int speed;
-	int direction;
-};
-
-int n, m, k, r, c, md, s, d;
 int dir[8][2] = { {-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1} };
 
-// 총 질량 기록을 위한 배열
-int total_weight[50][50];
-// 총 속도 기록을 위한 배열
-int total_speed[50][50];
-vector<fireball> v[50][50];
+int n, M, k, r, c, m, s, d, result;
+vector<info> arr[50][50];
 
+// 파이어볼 이동
 void fireball_move() {
-	vector<temp_fireball> temp;
+	vector<info> temp[50][50];
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (v[i][j].empty())
-				continue;
-		
-			int Size = v[i][j].size();
+			for (int f = 0; f < arr[i][j].size(); f++) {
+				int m = arr[i][j][f].m;
+				int s = arr[i][j][f].s;
+				int d = arr[i][j][f].d;
 
-			for (int s = 0; s < Size; s++) {
-				int m = v[i][j].front().weight;
-				int sp = v[i][j].front().speed;
-				int d = v[i][j].front().direction;
-				total_weight[i][j] -= m;
-				total_speed[i][j] -= sp;
-				v[i][j].erase(v[i][j].begin());
+				int y = i, x = j;
 
-				int ny = i, nx = j;
-				
-				for (int i = 0; i < sp; i++) {
-					ny += dir[d][0];
+				for (int q = 0; q < s; q++) {
+					y = y + dir[d][0];
+					if (y == -1)
+						y = n - 1;
+					if (y == n)
+						y = 0;
 
-					if (ny < 0)
-						ny = n - 1;
-					else if (ny == n)
-						ny = 0;
-
-					nx += dir[d][1];
-
-					if (nx < 0)
-						nx = n - 1;
-					else if (nx == n)
-						nx = 0;
+					x = x + dir[d][1];
+					if (x == -1)
+						x = n - 1;
+					if (x == n)
+						x = 0;
 				}
 
-				temp.push_back({ ny,nx,m,sp,d });
+				temp[y][x].push_back({ m, s, d });
 			}
 		}
 	}
 
-	for (int s = 0; s < temp.size(); s++) {
-		v[temp[s].y][temp[s].x].push_back({ temp[s].weight,temp[s].speed,temp[s].direction });
-		total_weight[temp[s].y][temp[s].x] += temp[s].weight;
-		total_speed[temp[s].y][temp[s].x] += temp[s].speed;
-	}
-}
-
-void single_check() {
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			if (v[i][j].size() >= 2) {
-				int dir_check = v[i][j][0].direction % 2;
-				bool check = true;
+			if (temp[i][j].size() < 2)
+				continue;
 
-				for (int s = 0; s < v[i][j].size(); s++) {
-					if (dir_check != (v[i][j][s].direction % 2))
-						check = false;
-				}
+			int m_sum = 0, s_sum = 0, f_dir = temp[i][j][0].d % 2;
+			int size = temp[i][j].size();
+			bool same = true;
 
-				int nw = total_weight[i][j] / 5;
-				int ns = total_speed[i][j] / v[i][j].size();
+			for (int f = 0; f < temp[i][j].size(); f++) {
+				m_sum += temp[i][j][f].m;
+				s_sum += temp[i][j][f].s;
 				
-				if (nw == 0) {
-					v[i][j].clear();
-					total_weight[i][j] = 0;
-					total_speed[i][j] = 0;
+				if (f_dir != (temp[i][j][f].d % 2))
+					same = false;
+			}
+
+			temp[i][j].clear();
+
+			if (m_sum / 5 > 0) {
+				if (same) {
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 0 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 2 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 4 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 6 });
 				}
 				else {
-					v[i][j].clear();
-
-					// 모두 홀수 or 짝수
-					if (check) {
-						v[i][j].push_back({ nw, ns, 0 });
-						v[i][j].push_back({ nw, ns, 2 });
-						v[i][j].push_back({ nw, ns, 4 });
-						v[i][j].push_back({ nw, ns, 6 });
-
-						total_weight[i][j] = nw * 4;
-						total_speed[i][j] = ns * 4;
-					}
-					// 아닌 경우
-					else {
-						v[i][j].push_back({ nw, ns, 1 });
-						v[i][j].push_back({ nw, ns, 3 });
-						v[i][j].push_back({ nw, ns, 5 });
-						v[i][j].push_back({ nw, ns, 7 });
-
-						total_weight[i][j] = nw * 4;
-						total_speed[i][j] = ns * 4;
-					}
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 1 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 3 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 5 });
+					temp[i][j].push_back({ m_sum / 5, s_sum / size, 7 });
 				}
 			}
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			arr[i][j] = temp[i][j];
 		}
 	}
 }
@@ -125,26 +92,22 @@ int main() {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 
-	// 정보 입력
-	cin >> n >> m >> k;
+	cin >> n >> M >> k;
+	for (int i = 0; i < M; i++) {
+		cin >> r >> c >> m >> s >> d;
 
-	for (int i = 0; i < m; i++) {
-		cin >> r >> c >> md >> s >> d;
-
-		v[r - 1][c - 1].push_back({ md,s,d });
-		total_weight[r - 1][c - 1] += md;
-		total_speed[r - 1][c - 1] += s;
+		r--, c--;
+		arr[r][c].push_back({ m , s, d });
 	}
 
-	while (k--) {
+	for (int i = 0; i < k; i++)
 		fireball_move();
-		single_check();
-	}
 
-	int result = 0;
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			result += total_weight[i][j];
+			for (int f = 0; f < arr[i][j].size(); f++) {
+				result += arr[i][j][f].m;
+			}
 		}
 	}
 
