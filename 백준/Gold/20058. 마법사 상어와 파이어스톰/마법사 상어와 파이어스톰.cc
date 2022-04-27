@@ -1,64 +1,70 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, q, l, result, large, Size, arr[64][64], temp[64][64];
+int n, q, l, total_ice, large, arr[64][64], temp[64][64];
+
+bool visited[64][64], check[64][64];
 int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+int arr_size;
 
-bool visited[64][64];
+void arr_rotate(int divide) {
+	memset(temp, 0, sizeof(temp));
 
-void copy(int arr1[][64], int arr2[][64]) {
-	for (int i = 0; i < 64; i++) {
-		for (int j = 0; j < 64; j++) {
-			arr1[i][j] = arr2[i][j];
-		}
-	}
-}
+	int plus = pow(2, divide);
 
-void ice_move(int y, int x, int board_size) {
-	int cnt = x + board_size - 1;
-
-	for (int i = y; i < y + board_size; i++) {
-		int idx = y;
-
-		for (int j = x; j < x + board_size; j++) {
-			temp[idx++][cnt] = arr[i][j];
-		}
-
-		cnt--;
-	}
-}
-
-void melt_ice() {
-	copy(temp, arr);
-
-	for (int i = 0; i < Size; i++) {
-		for (int j = 0; j < Size; j++) {
-			if (arr[i][j] == 0)
-				continue;
-			else {
-				int cnt = 0;
-
-				for (int t = 0; t < 4; t++) {
-					int ny = i + dir[t][0];
-					int nx = j + dir[t][1];
-
-					if (ny >= 0 && ny < Size && nx >= 0 && nx < Size && arr[ny][nx] != 0)
-						cnt++;
+	for (int i = 0; i < arr_size; i += plus) {
+		for (int j = 0; j < arr_size; j += plus) {
+			for (int y = 0; y < plus; y++) {
+				for (int x = 0; x < plus; x++) {
+					temp[y][x] = arr[i + plus - 1 - x][j + y];
 				}
+			}
 
-				if (cnt < 3)
-					temp[i][j]--;
+			for (int y = 0; y < plus; y++) {
+				for (int x = 0; x < plus; x++) {
+					arr[i + y][j + x] = temp[y][x];
+				}
 			}
 		}
 	}
+}
 
-	copy(arr, temp);
+void ice_melt() {
+	memset(check, false, sizeof(check));
+
+	for (int i = 0; i < arr_size; i++) {
+		for (int j = 0; j < arr_size; j++) {
+			if (!arr[i][j])
+				continue;
+
+			int cnt = 0;
+			for (int d = 0; d < 4; d++) {
+				int y = i + dir[d][0];
+				int x = j + dir[d][1];
+
+				if (y < 0 || y >= arr_size || x < 0 || x >= arr_size)
+					continue;
+				if (arr[y][x] > 0)
+					cnt++;
+			}
+
+			if (cnt < 3)
+				check[i][j] = true;
+		}
+	}
+
+	for (int i = 0; i < arr_size; i++) {
+		for (int j = 0; j < arr_size; j++) {
+			if (check[i][j])
+				arr[i][j]--;
+		}
+	}
 }
 
 int bfs(int y, int x) {
-	int cnt = 1;
-
 	queue<pair<int, int>> q;
+
+	int cnt = 1;
 	q.push({ y,x });
 	visited[y][x] = true;
 
@@ -71,9 +77,7 @@ int bfs(int y, int x) {
 			int ny = cy + dir[i][0];
 			int nx = cx + dir[i][1];
 
-			if (ny < 0 || ny >= Size || nx < 0 || nx >= Size)
-				continue;
-			if (visited[ny][nx] || arr[ny][nx] == 0)
+			if (ny < 0 || ny >= arr_size || nx < 0 || nx >= arr_size || visited[ny][nx] || !arr[ny][nx])
 				continue;
 
 			cnt++;
@@ -90,50 +94,32 @@ int main() {
 	cin.tie(0);
 
 	cin >> n >> q;
-
-	Size = pow(2, n);
-	for (int i = 0; i < Size; i++) {
-		for (int j = 0; j < Size; j++) {
+	for (int i = 0; i < pow(2, n); i++) {
+		for (int j = 0; j < pow(2, n); j++) {
 			cin >> arr[i][j];
 		}
 	}
 
-	while (q--) {
+	arr_size = pow(2, n);
+
+	for (int i = 0; i < q; i++) {
 		cin >> l;
 
-		int board_size = pow(2, l);
-		int board = pow(4, l);
-		int y = 0, x = 0;
-		int total = Size * Size / board;
-
-		while (total--) {
-			ice_move(y, x, board_size);
-
-			x += board_size;
-
-			if (x == Size) {
-				x = 0;
-				y += board_size;
-			}
-
-		}
-
-		copy(arr, temp);
-
-		melt_ice();
+		arr_rotate(l);
+		ice_melt();
 	}
 
-	for (int i = 0; i < Size; i++) {
-		for (int j = 0; j < Size; j++) {
-			result += arr[i][j];
+	for (int i = 0; i < arr_size; i++) {
+		for (int j = 0; j < arr_size; j++) {
+			total_ice += arr[i][j];
 
-			if (arr[i][j] != 0 && !visited[i][j])
+			if (arr[i][j] && !visited[i][j])
 				large = max(large, bfs(i, j));
 		}
 	}
 
-	cout << result << '\n';
-	cout << large;
+	cout << total_ice << '\n';
+	cout << large << '\n';
 
 	return 0;
 }
