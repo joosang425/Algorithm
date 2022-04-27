@@ -15,6 +15,7 @@
 |----------|----------|----------|----------|----------|----------|
 |1012|유기농 배추|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/1012.%E2%80%85%EC%9C%A0%EA%B8%B0%EB%86%8D%E2%80%85%EB%B0%B0%EC%B6%94/%EC%9C%A0%EA%B8%B0%EB%86%8D%E2%80%85%EB%B0%B0%EC%B6%94.cc)|14501|퇴사|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/14501.%E2%80%85%ED%87%B4%EC%82%AC/%ED%87%B4%EC%82%AC.cc)|
 |14888|연산자 끼워넣기|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/14888.%E2%80%85%EC%97%B0%EC%82%B0%EC%9E%90%E2%80%85%EB%81%BC%EC%9B%8C%EB%84%A3%EA%B8%B0/%EC%97%B0%EC%82%B0%EC%9E%90%E2%80%85%EB%81%BC%EC%9B%8C%EB%84%A3%EA%B8%B0.cc)|14889|스타트와 링크|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/14889.%E2%80%85%EC%8A%A4%ED%83%80%ED%8A%B8%EC%99%80%E2%80%85%EB%A7%81%ED%81%AC/%EC%8A%A4%ED%83%80%ED%8A%B8%EC%99%80%E2%80%85%EB%A7%81%ED%81%AC.cc)|
+|21608|상어 초등학교|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Silver/21608.%E2%80%85%EC%83%81%EC%96%B4%E2%80%85%EC%B4%88%EB%93%B1%ED%95%99%EA%B5%90/%EC%83%81%EC%96%B4%E2%80%85%EC%B4%88%EB%93%B1%ED%95%99%EA%B5%90.cc)|
 
 #### [골드](https://github.com/joosang425/Algorithm/tree/main/%EB%B0%B1%EC%A4%80/Gold)
 |문제 번호|제목|내용|문제 번호|제목|내용|
