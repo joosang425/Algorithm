@@ -1,68 +1,135 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-pair<int, int> tonado;
-int n, result, arr[500][500];
-
+int n, cnt, result, arr[500][500];
+// 좌, 하, 우, 상
 int dir[4][10][3] = {
-	// 위쪽
-	{{-2, 0, 0},{0,-1,1},{0,1,1},{-1,-2,2},{-1,2,2},{-1,-1,7},{-1,1,7},{-2,-1,10}, {-2,1,10}, {-3,0,5}},
-	// 왼쪽
-	{{0, -2, 0},{-1,0,1},{1,0,1},{-2,-1,2},{2,-1,2},{-1,-1,7},{1,-1,7},{1,-2,10}, {-1,-2,10}, {0,-3,5}},
-	// 아래쪽
-	{{2, 0, 0},{0,-1,1},{0,1,1},{1,-2,2},{1,2,2},{1,-1,7},{1,1,7},{2,-1,10}, {2,1,10}, {3,0,5}},
-	// 오른쪽
-	{{0, 2, 0},{-1,0,1},{1,0,1},{-2,1,2},{2,1,2},{-1,1,7},{1,1,7},{-1,2,10}, {1,2,10},{0,3,5}}
+	{{-1, 0, 1}, {1, 0, 1}, {-1, -1, 7}, {1, -1, 7}, {-2, -1, 2}, {2, -1, 2}, {-1, -2, 10}, {1, -2, 10}, {0, -3, 5}, {0, -2 ,0}},
+	{{0, -1, 1}, {0, 1, 1}, {1, -1, 7}, {1, 1, 7}, {1, -2, 2}, {1, 2, 2}, {2, -1, 10}, {2, 1, 10}, {3, 0, 5}, {2, 0, 0}},
+	{{-1, 0, 1}, {1, 0, 1}, {-1, 1, 7}, {1, 1, 7}, {-2, 1, 2}, {2, 1, 2}, {-1, 2, 10}, {1, 2, 10}, {0, 3, 5}, {0, 2, 0}},
+	{{0, -1, 1}, {0, 1, 1}, {-1, -1, 7}, {-1, 1, 7}, {-1, -2, 2}, {-1, 2, 2}, {-2, -1, 10}, {-2, 1, 10}, {-3, 0, 5}, {-2, 0, 0}}
 };
 
-// y, x: 현재 토네이도 위치
-void land_record(int y, int x, int ny, int nx, int direction) {	
-	int total_land = arr[ny][nx];
+void spread(int y, int x) {
+	cnt++;
+	// 좌
+	for (int j = 0; j < cnt; x--, j++) {
+		int sum = 0;
 
-	for (int i = 1; i <= 9; i++) {
-		int nny = y + dir[direction][i][0];
-		int nnx = x + dir[direction][i][1];
-		int value = dir[direction][i][2];
-		int land = (arr[ny][nx] * value) / 100;
+		for (int d = 0; d < 9; d++) {
+			int ny = y + dir[0][d][0];
+			int nx = x + dir[0][d][1];
+			int value = (arr[y][x - 1] * dir[0][d][2]) / 100;
 
-		if (nny < 0 || nny >= n || nnx < 0 || nnx >= n)
-			result += land;
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n) {
+				result += value;
+				sum += value;
+			}
+			else {
+				arr[ny][nx] += value;
+				sum += value;
+			}
+		}
+
+		int ny = y + dir[0][9][0];
+		int nx = x + dir[0][9][1];
+
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+			result += (arr[y][x - 1] - sum);
 		else
-			arr[nny][nnx] += land;
+			arr[ny][nx] += (arr[y][x - 1] - sum);
 
-		total_land -= land;
+		arr[y][x - 1] = 0;
+	}
+	// 하
+	for (int i = 0; i < cnt; y++, i++) {
+		int sum = 0;
+
+		for (int d = 0; d < 9; d++) {
+			int ny = y + dir[1][d][0];
+			int nx = x + dir[1][d][1];
+			int value = (arr[y + 1][x] * dir[1][d][2]) / 100;
+
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n) {
+				result += value;
+				sum += value;
+			}
+			else {
+				arr[ny][nx] += value;
+				sum += value;
+			}
+		}
+
+		int ny = y + dir[1][9][0];
+		int nx = x + dir[1][9][1];
+
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+			result += (arr[y + 1][x] - sum);
+		else
+			arr[ny][nx] += (arr[y + 1][x] - sum);
+
+		arr[y + 1][x] = 0;
 	}
 
-	int ay = y + dir[direction][0][0];
-	int ax = x + dir[direction][0][1];
+	cnt++;
+	// 우
+	for (int j = 0; j < cnt; x++, j++) {
+		int sum = 0;
 
-	if (ay < 0 || ay >= n || ax < 0 || ax >= n)
-		result += total_land;
-	else
-		arr[ay][ax] += total_land;
+		for (int d = 0; d < 9; d++) {
+			int ny = y + dir[2][d][0];
+			int nx = x + dir[2][d][1];
+			int value = (arr[y][x + 1] * dir[2][d][2]) / 100;
 
-	arr[ny][nx] = 0;
-}
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n) {
+				result += value;
+				sum += value;
+			}
+			else {
+				arr[ny][nx] += value;
+				sum += value;
+			}
+		}
 
-// y, x: 토네이도 시작 위치
-// plus_y, plus_x: 더해줄 값
-// cnt: 몇 번 가야하는지 체크하기
+		int ny = y + dir[2][9][0];
+		int nx = x + dir[2][9][1];
 
-void tonado_move(int y, int x, int plus_y, int plus_x, int cnt, int direction) {
-	int ny = 0, nx = 0;
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+			result += (arr[y][x + 1] - sum);
+		else
+			arr[ny][nx] += (arr[y][x + 1] - sum);
 
-	while (cnt--) {
-		ny = y + plus_y;
-		nx = x + plus_x;
-
-		if (arr[ny][nx] != 0)
-			land_record(y, x, ny, nx, direction);
-
-		y = ny;
-		x = nx;
+		arr[y][x + 1] = 0;
 	}
+	// 상
+	for (int i = 0; i < cnt; y--, i++) {
+		int sum = 0;
 
-	tonado.first = ny, tonado.second = nx;
+		for (int d = 0; d < 9; d++) {
+			int ny = y + dir[3][d][0];
+			int nx = x + dir[3][d][1];
+			int value = (arr[y - 1][x] * dir[3][d][2]) / 100;
+
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n) {
+				result += value;
+				sum += value;
+			}
+			else {
+				arr[ny][nx] += value;
+				sum += value;
+			}
+		}
+
+		int ny = y + dir[3][9][0];
+		int nx = x + dir[3][9][1];
+
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+			result += (arr[y - 1][x] - sum);
+		else
+			arr[ny][nx] += (arr[y - 1][x] - sum);
+
+		arr[y - 1][x] = 0;
+	}
 }
 
 int main() {
@@ -76,23 +143,43 @@ int main() {
 		}
 	}
 
-	tonado.first = n / 2;
-	tonado.second = n / 2;
+	// 시작점은 정중앙
+	int sy = (n - 1) / 2, sx = (n - 1) / 2;
 
-	int fd = 1, sd = 2;
-	int fy = 0, fx = -1;
-	int sy = 1, sx = 0;
+	// 7X7 -> 3번, 5X5 -> 2번
+	for (int i = 0; i < (n - 1) / 2; i++)
+		spread(sy--, sx++);
 
-	for (int i = 0; i < (n * 2 - 1) / 2; i++) {
-		tonado_move(tonado.first, tonado.second, fy, fx, i + 1, fd);
-		tonado_move(tonado.first, tonado.second, sy, sx, i + 1, sd);
+	cnt++;
+	// 좌
+	for (int j = 0; j < cnt; sx--, j++) {
+		int sum = 0;
 
-		fy *= -1, fx *= -1, sy *= -1, sx *= -1;
-		fd = (fd + 2) % 4;
-		sd = (sd + 2) % 4;
+		for (int d = 0; d < 9; d++) {
+			int ny = sy + dir[0][d][0];
+			int nx = sx + dir[0][d][1];
+			int value = (arr[sy][sx - 1] * dir[0][d][2]) / 100;
+
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n) {
+				result += value;
+				sum += value;
+			}
+			else {
+				arr[ny][nx] += value;
+				sum += value;
+			}
+		}
+
+		int ny = sy + dir[0][9][0];
+		int nx = sx + dir[0][9][1];
+
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+			result += (arr[sy][sx - 1] - sum);
+		else
+			arr[ny][nx] += (arr[sy][sx - 1] - sum);
+
+		arr[sy][sx - 1] = 0;
 	}
-
-	tonado_move(tonado.first, tonado.second, 0, -1, n - 1, 1);
 
 	cout << result << '\n';
 
