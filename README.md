@@ -46,6 +46,7 @@
 |문제 번호|제목|내용|문제 번호|제목|내용|
 |----------|----------|----------|----------|----------|----------|
 |23291|어항 정리|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Platinum/23291.%E2%80%85%EC%96%B4%ED%95%AD%E2%80%85%EC%A0%95%EB%A6%AC/%EC%96%B4%ED%95%AD%E2%80%85%EC%A0%95%EB%A6%AC.cc)|5373|큐빙|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Platinum/5373.%E2%80%85%ED%81%90%EB%B9%99/%ED%81%90%EB%B9%99.cc)|
+|23289|온풍기 안녕 !|[cpp](https://github.com/joosang425/Algorithm/blob/main/%EB%B0%B1%EC%A4%80/Platinum/23289.%E2%80%85%EC%98%A8%ED%92%8D%EA%B8%B0%E2%80%85%EC%95%88%EB%85%95%EF%BC%81/%EC%98%A8%ED%92%8D%EA%B8%B0%E2%80%85%EC%95%88%EB%85%95%EF%BC%81.cc)|
 
 <hr>
 
