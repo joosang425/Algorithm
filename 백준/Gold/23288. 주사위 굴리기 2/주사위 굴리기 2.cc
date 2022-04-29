@@ -1,63 +1,53 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+int n, m, k, d, result, arr[20][20];
+pair<int, int> dice_pos;
+
+// 뒤, 위, 앞, 밑, 오, 왼
+int dice[6] = { 2, 1, 5, 6, 3, 4 };
+int dir[4][2] = { {0, 1}, {1,0},{0,-1},{-1,0} };
 bool visited[20][20];
-int n, m, k, result, arr[20][20];
 
-// 상, 우, 하, 좌
-int dir[4][2] = { {-1,0}, {0,1}, {1, 0}, {0,-1} };
-// 상, 후, 하, 전, 우, 좌
-int dice[6] = { 1, 2, 6, 5, 3, 4 };
-
-pair<pair<int,int>,int> dice_move(int y, int x, int direction) {
-	int ny = y + dir[direction][0];
-	int nx = x + dir[direction][1];
-
-	if (ny < 0 || ny >= n || nx < 0 || nx >= m) {
-		direction = (direction + 2) % 4;
-		
-		ny = y + dir[direction][0];
-		nx = x + dir[direction][1];
+void dice_move(int d) {
+	// 동
+	if (d == 0) {
+		int temp = dice[1];
+		dice[1] = dice[5];
+		dice[5] = dice[3];
+		dice[3] = dice[4];
+		dice[4] = temp;
 	}
-
-	if (direction == 0) {
-		int temp = dice[0];
+	// 남
+	else if (d == 1) {
+		int temp = dice[1];
+		dice[1] = dice[0];
 		dice[0] = dice[3];
 		dice[3] = dice[2];
-		dice[2] = dice[1];
-		dice[1] = temp;
-	}
-	// 우
-	else if (direction == 1) {
-		int temp = dice[4];
-		dice[4] = dice[0];
-		dice[0] = dice[5];
-		dice[5] = dice[2];
 		dice[2] = temp;
 	}
-	// 하
-	else if (direction == 2) {
-		int temp = dice[2];
+	// 서
+	else if (d == 2) {
+		int temp = dice[1];
+		dice[1] = dice[4];
+		dice[4] = dice[3];
+		dice[3] = dice[5];
+		dice[5] = temp;
+	}
+	// 북
+	else {
+		int temp = dice[1];
+		dice[1] = dice[2];
 		dice[2] = dice[3];
 		dice[3] = dice[0];
-		dice[0] = dice[1];
-		dice[1] = temp;
+		dice[0] = temp;
 	}
-	// 좌
-	else {
-		int temp = dice[5];
-		dice[5] = dice[0];
-		dice[0] = dice[4];
-		dice[4] = dice[2];
-		dice[2] = temp;
-	}
-
-	return { {ny, nx}, direction };
 }
 
 int bfs(int y, int x) {
-	int cnt = 1;
 	queue<pair<int, int>> q;
+	
+	int cnt = 1;
 	q.push({ y,x });
 	visited[y][x] = true;
 
@@ -70,14 +60,12 @@ int bfs(int y, int x) {
 			int ny = cy + dir[i][0];
 			int nx = cx + dir[i][1];
 
-			if (ny < 0 || ny >= n || nx < 0 || nx >= m || visited[ny][nx])
-				continue;
-			if (arr[ny][nx] != arr[y][x])
+			if (ny < 0 || ny >= n || nx < 0 || nx >= m || visited[ny][nx] || (arr[y][x] != arr[ny][nx]))
 				continue;
 
-			cnt++;
-			visited[ny][nx] = true;
 			q.push({ ny,nx });
+			visited[ny][nx] = true;
+			cnt++;
 		}
 	}
 
@@ -95,26 +83,39 @@ int main() {
 		}
 	}
 
-	int y = 0, x = 0, direction = 1;
-	pair<pair<int, int>, int> cur;
+	dice_pos.first = 0, dice_pos.second = 0;
+	d = 0;
 
 	for (int i = 0; i < k; i++) {
 		memset(visited, false, sizeof(visited));
 
-		cur = dice_move(y, x, direction);
+		int ny = dice_pos.first + dir[d][0];
+		int nx = dice_pos.second + dir[d][1];
 
-		y = cur.first.first;
-		x = cur.first.second;
-		direction = cur.second;
+		// 이동 방향에 칸이 없다면 방향을 반대로 한 뒤 한 칸 굴러간다.
+		if (ny < 0 || ny >= n || nx < 0 || nx >= m) {
+			d = (d + 2) % 4;
 
-		int cnt = bfs(y, x);
+			ny = dice_pos.first + dir[d][0];
+			nx = dice_pos.second + dir[d][1];
+		}
 
-		result += (cnt * arr[y][x]);
+		// 주사위 굴리기
+		dice_pos.first = ny, dice_pos.second = nx;
+		dice_move(d);
 
-		if (dice[2] > arr[y][x])
-			direction = (direction + 1) % 4;
-		else if (dice[2] < arr[y][x])
-			direction = (direction + 3) % 4;
+		// 도착한 칸에 대한 점수 획득
+		int cnt = bfs(dice_pos.first, dice_pos.second);
+		result += arr[dice_pos.first][dice_pos.second] * cnt;
+
+		// 이동 방향 결정
+		int value = arr[dice_pos.first][dice_pos.second];
+		int num = dice[3];
+		
+		if (num > value)
+			d = (d + 1) % 4;
+		else if (num < value)
+			d = (d + 3) % 4;
 	}
 
 	cout << result << '\n';
