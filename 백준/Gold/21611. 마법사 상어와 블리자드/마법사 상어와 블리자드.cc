@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int n, m, d, s, arr[55][55], result[3];
+int n, m, d, s, result, arr[55][55];
 
 bool crack[55 * 55];
 int sequence[55][55];
@@ -21,46 +21,34 @@ int next_dir(int num) {
 }
 
 // 구슬 격자 안에 추가 및 vector 안에 삽입
-void make_marble() {
-	int idx = 0;
+void make_seq() {
+	int y = n / 2, x = n / 2, d = 2, cnt = 1, idx = 0;
 
-	sequence[(n - 1) / 2][(n - 1) / 2] = idx;
-	marble[idx++] = { (n - 1) / 2, (n - 1) / 2 };
-	sequence[(n - 1) / 2][(n - 1) / 2 - 1] = idx;
-	marble[idx++] = { (n - 1) / 2, (n - 1) / 2 - 1 };
+	sequence[n / 2][n / 2] = idx;
+	marble[idx++] = { y,x };
 
-	int sy = (n - 1) / 2 + 1;
-	int sx = (n - 1) / 2 - 1;
-	int direction = 3;
+	for (int t = 0; t < n - 1; t++) {
+		for (int z = 0; z < 2; z++) {
+			for (int i = 0; i < cnt; i++) {
+				y += dir[d][0];
+				x += dir[d][1];
 
-	for (int i = 2; i < n; i++) {
-		for (int x = 0; x < i; x++) {
-			sequence[sy][sx] = idx;
-			marble[idx++] = { sy, sx };
+				marble[idx] = { y,x };
+				sequence[y][x] = idx++;
+			}
 
-			sy += dir[direction][0];
-			sx += dir[direction][1];
+			d = next_dir(d);
 		}
 
-		direction = next_dir(direction);
-
-		for (int y = 0; y < i; y++) {
-			sequence[sy][sx] = idx;
-			marble[idx++] = { sy,sx };
-
-			sy += dir[direction][0];
-			sx += dir[direction][1];
-		}
-
-		direction = next_dir(direction);
+		cnt++;
 	}
 
-	for (int i = 0; i < n; i++) {
-		sequence[sy][sx] = idx;
-		marble[idx++] = { sy,sx };
+	for (int i = 0; i < cnt; i++) {
+		y += dir[d][0];
+		x += dir[d][1];
 
-		sy += dir[direction][0];
-		sx += dir[direction][1];
+		marble[idx] = { y,x };
+		sequence[y][x] = idx++;
 	}
 }
 
@@ -68,12 +56,12 @@ void make_marble() {
 void marble_crack(int direction, int speed) {
 	memset(crack, false, sizeof(crack));
 
-	int y = (n - 1) / 2;
-	int x = (n - 1) / 2;
+	int y = n / 2;
+	int x = n / 2;
 
 	for (int i = 0; i < speed; i++) {
-		y = y + dir[direction][0];
-		x = x + dir[direction][1];
+		y += dir[direction][0];
+		x += dir[direction][1];
 
 		crack[sequence[y][x]] = true;
 	}
@@ -133,7 +121,8 @@ bool check() {
 				flag = true;
 				for (int j = start; j < i; j++)
 					crack[j] = true;
-				result[cur - 1] += cnt;
+
+				result += cur * cnt;
 			}
 
 			cur = next;
@@ -148,7 +137,8 @@ bool check() {
 		flag = true;
 		for (int j = start; j < i; j++)
 			crack[j] = true;
-		result[cur - 1] += cnt;
+
+		result += cur * cnt;
 	}
 
 	return flag;
@@ -212,7 +202,7 @@ int main() {
 		}
 	}
 
-	make_marble();
+	make_seq();
 
 	for (int i = 0; i < m; i++) {
 		cin >> d >> s;
@@ -232,8 +222,7 @@ int main() {
 		remake_marble();
 	}
 
-	int sum = result[0] + (result[1] * 2) + (result[2] * 3);
-	cout << sum << '\n';
+	cout << result << '\n';
 
 	return 0;
 }
