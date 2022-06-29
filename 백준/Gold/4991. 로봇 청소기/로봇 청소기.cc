@@ -48,7 +48,7 @@ int bfs(int sy, int sx, int ey, int ex) {
 void dfs(int cur, string str) {
 	if (dirty.size() == str.length()) {
 		if (dist[0][str[0] - '0'] == INF)
-			return;
+			return;	// 갈 수 없는 경로인 경우 바로 return
 
 		int temp = dist[0][str[0] - '0'];
 
@@ -57,7 +57,7 @@ void dfs(int cur, string str) {
 			int second = str[i + 1] - '0';
 
 			if (dist[first][second] == INF)
-				return;
+				return;	// 갈 수 없는 경로인 경우 바로 return
 
 			temp += dist[first][second];
 		}
@@ -108,7 +108,7 @@ int main() {
 
 			dist[0][i + 1] = temp;
 			dist[i + 1][0] = temp;
-		}
+		} // 현재 청소기와의 거리 저장
 
 		for (int i = 0; i < dirty.size(); i++) {
 			for (int j = 0; j < dirty.size(); j++) {
@@ -120,9 +120,9 @@ int main() {
 				dist[i + 1][j + 1] = temp;
 				dist[j + 1][i + 1] = temp;
 			}
-		}
+		} // 각 청소기마다 거리 저장
 
-		dfs(1, "");
+		dfs(1, "");	// 조합을 통해 최소 거리 
 
 		if (result == INF)
 			cout << -1 << '\n';
